@@ -31,7 +31,7 @@ class Landing extends JFrame {
 
         b1.addActionListener(
                 a->{
-                    //opens Alogin page and disposes current page
+           
                     new Alogin();
                     dispose();
                 }
