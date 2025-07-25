@@ -99,10 +99,8 @@ class Home extends JFrame {
                 }
         );
 
-        //jaise hi home load hua dtabase pe jaa aur balance directly check kar
-        // we dont have to wait for a button to trigger the below
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try (Connection con = DriverManager.getConnection(url, "root", "SohamSQL#1211")) {
+        try (Connection con = DriverManager.getConnection(url, "root", "")) {
             String sql = "select balance from users where username=?";
             try (PreparedStatement pst = con.prepareStatement(sql)) {
                 pst.setString(1, username);
