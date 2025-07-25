@@ -102,38 +102,33 @@ class Nlogin extends JFrame {
 
         b1.addActionListener(
                 a -> {
-                    //password same hoga toh hi aage bado
+              
                     if (t2.getText().equals(t3.getText())) {
                         String url = "jdbc:mysql://localhost:3306/batch2";
-                        //connection build karne ka try kiya aur connection ho gaya toh try ke andar jayega
-                        //it requires three things 1.the url for your local host server 2.the user name of sql 3.password
-                        try (Connection con = DriverManager.getConnection(url, "root", "SohamSQL#1211"))
+                
+                        try (Connection con = DriverManager.getConnection(url, "root", ""))
                         {
-                            //query dena chalu kiya aur 4 cheexze diye
                             String sql = "INSERT INTO users(username,password,phone,email,gender) VALUES(?, ? , ?, ?, ?)";
-                            //it will try to fix the unprepared statement
-                            // convert karea prepared statement mai
+                           
                             try (PreparedStatement pst = con.prepareStatement(sql))
                             {
-                                //first questionamrk ko change karega username se
+                                
                                 pst.setString(1,t1.getText());
-                                //second question mark ko chage karega pssword se
+                              
                                 pst.setString(2,t2.getText());
                                 pst.setString(3,t4.getText());
                                 pst.setString(4,t5.getText());
-                                //gender bo mai konsa seelected hai voh  gert karo and to string mai convert karo
+                             
                                 pst.setString(5,genderBox.getSelectedItem().toString());
 
-                                //query ko update kar rahe hai isiliye update query,table mai daata chala jayega
                                 pst.executeUpdate();
                                 JOptionPane.showMessageDialog(null, "Signup Successful");
-                                //naya page khula chahiye
-                                //t1.gettext is passing the username to home page
+                             
                                 new Home(t1.getText());
                                 dispose();
                             }
                         } catch (Exception e) {
-                            //exception handling
+                          
                             JOptionPane.showMessageDialog(null, e.getMessage());
                         }
                     } else {
