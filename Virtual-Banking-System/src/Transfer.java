@@ -139,7 +139,7 @@ class Transfer extends JFrame {
     void updatebalance(String username, double total)
     {
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        try(Connection con = DriverManager.getConnection(url,"root",""))
         {
             String sql = "update users set balance=? where username=?";
             try(PreparedStatement pst = con.prepareStatement(sql))
