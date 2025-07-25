@@ -44,12 +44,12 @@ class Alogin extends JFrame {
         b1.addActionListener(
                 a->
                 {
-                    //p1 jo password form kmai tha voh string mai aa gaya
+                    
                     String s1 = new String(p1.getPassword());
-                    //agar uesername and admin ka password arch karta hai toh fir if mai jao
+             
                     if(t1.getText().equals("admin") && s1.equals("pass"))
                     {
-                        //redirect to adashboard
+         
                         new Adashboard();
                         dispose();
                     }
