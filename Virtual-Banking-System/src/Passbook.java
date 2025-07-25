@@ -1,0 +1,108 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class Passbook extends JFrame {
+    //1 hi user ka dikhane ke liye passbook ko username pass kiya
+    Passbook(String username) {
+        Font titleFont = new Font("Futura", Font.BOLD, 40);
+        Font tableFont = new Font("Calibri", Font.PLAIN, 18);
+        Font buttonFont = new Font("Calibri", Font.BOLD, 20);
+
+        JLabel title = new JLabel("Passbook", JLabel.CENTER);
+        title.setFont(titleFont);
+        title.setForeground(new Color(255, 255, 255));
+        title.setOpaque(true);
+        title.setBackground(new Color(0, 102, 204));
+        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        String[] columnNames = {"Date & Time", "Description", "Amount", "Balance"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(tableModel);
+        table.setFont(tableFont);
+        table.setRowHeight(30);
+        table.getTableHeader().setFont(new Font("Calibri", Font.BOLD, 18));
+        table.getTableHeader().setBackground(new Color(0, 102, 204));
+        table.getTableHeader().setForeground(Color.WHITE);
+        table.setGridColor(new Color(224, 224, 224));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+
+
+        JButton backButton = new JButton("Back");
+        backButton.setFont(buttonFont);
+        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(new Color(255, 51, 51));
+        backButton.setFocusPainted(false);
+        backButton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        backButton.addActionListener(e ->
+        {
+            new Home(username);
+            dispose();
+        });
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(new Color(0, 102, 204));
+        topPanel.add(title, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBackground(new Color(224, 224, 224));
+        bottomPanel.add(backButton);
+
+        Container c = getContentPane();
+        c.setLayout(new BorderLayout(20, 20));
+        c.add(topPanel, BorderLayout.NORTH);
+        c.add(scrollPane, BorderLayout.CENTER);
+        c.add(bottomPanel, BorderLayout.SOUTH);
+
+
+        //directly start kiya because page load hote hi dikhna chahiye na ki koi button dabane pe
+        String url = "jdbc:mysql://localhost:3306/batch2";
+        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        {
+            //transaction se data aane wala hai
+            //order by date descending yani latest transaction upar display hoga
+            String sql = "select * from transactions where username=? order by date desc";
+            try(PreparedStatement pst = con.prepareStatement(sql))
+            {
+                pst.setString(1,username);
+                ResultSet rs = pst.executeQuery();
+                //multiple values print karne hai isiliye
+                while(rs.next())
+                {
+                    String s1 = rs.getString("date");
+                    String s2 = rs.getString("description");
+                    double d1 = rs.getDouble("amount");
+                    double d2 = rs.getDouble("balance");
+                    //table model <- table ka name hai
+                    //.addrow rows add karega
+                    // data alag type ka hoga toh ek box mai pack karna padega yani array object class ka ek array banaya and usme alag alag daya type ke sab cheze add ki
+                    tableModel.addRow(new Object[]{s1,s2,d1,d2});
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+
+        setTitle("Passbook");
+        setSize(800, 550);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new Passbook("Shreshth");
+    }
+}
+
+
+//unique id assign karo jo permanent ho voh set kardo
+//temp solution is to not let them change username
