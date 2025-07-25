@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Passbook extends JFrame {
-    //1 hi user ka dikhane ke liye passbook ko username pass kiya
+
     Passbook(String username) {
         Font titleFont = new Font("Futura", Font.BOLD, 40);
         Font tableFont = new Font("Calibri", Font.PLAIN, 18);
@@ -61,27 +61,24 @@ public class Passbook extends JFrame {
         c.add(bottomPanel, BorderLayout.SOUTH);
 
 
-        //directly start kiya because page load hote hi dikhna chahiye na ki koi button dabane pe
+
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        try(Connection con = DriverManager.getConnection(url,"root",""))
         {
-            //transaction se data aane wala hai
-            //order by date descending yani latest transaction upar display hoga
+
             String sql = "select * from transactions where username=? order by date desc";
             try(PreparedStatement pst = con.prepareStatement(sql))
             {
                 pst.setString(1,username);
                 ResultSet rs = pst.executeQuery();
-                //multiple values print karne hai isiliye
+         
                 while(rs.next())
                 {
                     String s1 = rs.getString("date");
                     String s2 = rs.getString("description");
                     double d1 = rs.getDouble("amount");
                     double d2 = rs.getDouble("balance");
-                    //table model <- table ka name hai
-                    //.addrow rows add karega
-                    // data alag type ka hoga toh ek box mai pack karna padega yani array object class ka ek array banaya and usme alag alag daya type ke sab cheze add ki
+
                     tableModel.addRow(new Object[]{s1,s2,d1,d2});
                 }
             }
@@ -103,6 +100,3 @@ public class Passbook extends JFrame {
     }
 }
 
-
-//unique id assign karo jo permanent ho voh set kardo
-//temp solution is to not let them change username
