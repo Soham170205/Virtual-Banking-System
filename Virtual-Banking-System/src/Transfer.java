@@ -71,8 +71,7 @@ class Transfer extends JFrame {
                         JOptionPane.showMessageDialog(null,"Cannot be empty");
                         return;
                     }
-                    //round 1 (deposit part 1)
-                    //fetch balance from sender
+                  
                     double balance = fetchbalance(username);
                     double amount = Double.parseDouble(s2);
 
@@ -81,24 +80,21 @@ class Transfer extends JFrame {
                         JOptionPane.showMessageDialog(null,"Insufficient amount");
                         return;
                     }
-                    //update the total value of sender
+                 
                     double total = balance - amount;
 
-                    //round 2 (withdraw 3)
-                    //update the total value of sender
+                   
                     updatebalance(username,total);
-                    //description mai jo likhna hai passbook mai voh aayega
+              
                    updatePassbook(username,"Transfer to "+samnewala,-amount,balance-amount);
-                    //round 3 (deposit 1)
-                    //receiver ka balance fetch(samnewala)
+              
                     balance = fetchbalance(samnewala);
                     total = amount + balance;
-                    //round 4 (deposit 3)
-                    //receiver ka balance update (samnewala)
+               
                     updatebalance(samnewala,total);
                     updatePassbook(samnewala,"Transfer from "+username,amount,balance+amount);
                     JOptionPane.showMessageDialog(null,"Transfer successful");
-                    //clear text fields
+            
                     t1.setText("");
                     t2.setText("");
                 }
@@ -113,12 +109,12 @@ class Transfer extends JFrame {
         setTitle("Transfer Funds");
     }
 
-    //sender ka balance fetch ho raha hai
+
     double fetchbalance(String username)
     {
         double balance = 0.0;
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        try(Connection con = DriverManager.getConnection(url,"root",""))
         {
             String sql = "select balance from users where username=?";
             try(PreparedStatement pst = con.prepareStatement(sql))
@@ -139,7 +135,7 @@ class Transfer extends JFrame {
         return balance;
     }
 
-    //balance update hoga
+
     void updatebalance(String username, double total)
     {
         String url = "jdbc:mysql://localhost:3306/batch2";
@@ -152,7 +148,7 @@ class Transfer extends JFrame {
                 pst.setString(2,username);
                 pst.executeUpdate();
 
-                // JOptionPane.showMessageDialog(null,"Successfully Withdrawn");
+             
             }
         }
         catch(Exception e) {
@@ -160,11 +156,10 @@ class Transfer extends JFrame {
         }
     }
 
-    //to fetch balance and place it in passbook records
     void updatePassbook(String username,String desc,double amount,double total)
     {
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        try(Connection con = DriverManager.getConnection(url,"root",""))
         {
             String sql = "insert into transactions(username,description,amount,balance) values(?,?,?,?) ";
             try(PreparedStatement pst = con.prepareStatement(sql))
