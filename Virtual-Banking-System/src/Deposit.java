@@ -51,14 +51,11 @@ class Deposit extends JFrame
         b1.addActionListener(
                 a->
                 {
-                    //table mai jaake voh user ka existing balance utha ke aayega
-                    //PART1
-                    //home ka try catch copied
-                    //
+
                     double balance = 0.0;
                     double total = 0.0;
                     String url = "jdbc:mysql://localhost:3306/batch2";
-                    try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+                    try(Connection con = DriverManager.getConnection(url,"root",""))
                     {
                         String sql = "select balance from users where username=?";
                         try(PreparedStatement pst = con.prepareStatement(sql))
@@ -77,8 +74,7 @@ class Deposit extends JFrame
                         JOptionPane.showMessageDialog(null,e.getMessage());
                     }
 
-                    //PART2
-                    //database se laya hua balance and naye amount ko add karna and second round to update the balance
+          
                     double amount = 0.0;
                     String s1 = t1.getText();
                     if(s1.isEmpty())
@@ -90,9 +86,8 @@ class Deposit extends JFrame
                         total = amount + balance;
                     }
 
-                    //PART3
-                    //balance ko update kiya query mai hence execute update
-                    try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+                    
+                    try(Connection con = DriverManager.getConnection(url,"root",""))
                     {
                         String sql = "update users set balance=? where username=?";
                         try(PreparedStatement pst = con.prepareStatement(sql))
@@ -102,11 +97,9 @@ class Deposit extends JFrame
                             pst.executeUpdate();
 
                             JOptionPane.showMessageDialog(null,"Successfully Deposited");
-                            //clear the textbox when button is pressed
+       
                             t1.setText("");
-                            //passbook update karne ke liye with the new amount
-                            //description yani page ka name
-                            //balance + amount to give updated amt
+                        
                             updatePassbook(username,"Deposit",amount,balance+amount);
                         }
                     }
@@ -126,13 +119,12 @@ class Deposit extends JFrame
         setTitle("Deposit Money");
     }
 
-    //passbook ko update karne ke liye
     void updatePassbook(String username,String desc,double amount,double total)
     {
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        try(Connection con = DriverManager.getConnection(url,"root",""))
         {
-            //transaction table mai insert karna hai
+     
             String sql = "insert into transactions(username,description,amount,balance) values(?,?,?,?) ";
             try(PreparedStatement pst = con.prepareStatement(sql))
             {
@@ -140,7 +132,6 @@ class Deposit extends JFrame
                 pst.setString(2,desc);
                 pst.setDouble(3,amount);
                 pst.setDouble(4,total);
-                //query update kar rahe hai isiliye
                 pst.executeUpdate();
             }
         }
