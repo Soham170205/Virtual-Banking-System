@@ -52,10 +52,9 @@ class Withdraw extends JFrame
                 {
                     double balance = 0.0;
                     double wlimit = 0.0;
-                    //PART 1
-                    //1 round to get the wlimit and balance of the current user
+                   
                     String url = "jdbc:mysql://localhost:3306/batch2";
-                    try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+                    try(Connection con = DriverManager.getConnection(url,"root",""))
                     {
                         String sql = "select balance,wlimit from users where username=?";
                         try(PreparedStatement pst = con.prepareStatement(sql))
@@ -63,7 +62,7 @@ class Withdraw extends JFrame
                             pst.setString(1,username);
 
                             ResultSet rs = pst.executeQuery();
-                            //khali nahi hai toh if mai jayega
+             
                             if(rs.next())
                             {
                                 balance = rs.getDouble("balance");
@@ -76,44 +75,40 @@ class Withdraw extends JFrame
                         JOptionPane.showMessageDialog(null,e.getMessage());
                     }
 
-                    //PART2
-                    //check the balance,empty string dala hai kya and wlimit
-                    // then minus the withdrawed amount
+                  
                     String s1 = t1.getText();
-                    //check if string is empty
+                 
                     if(s1.isEmpty())
                     {
                         JOptionPane.showMessageDialog(null,"Cannot be empty");
                     }
                     else
                     {
-                        //string ko double mai convert kiya
                         double wamount = Double.parseDouble(s1);
-                        //if withdraw amount exceeds balance
+              
                         if (wamount > balance) {
-                            JOptionPane.showMessageDialog(null, "Gareeb hai tu");
-                            //limit of withdraw se jyada exceed kiya
+                            JOptionPane.showMessageDialog(null, "Insufficient Balance");
+                         
                         } else if (wamount > wlimit) {
                             JOptionPane.showMessageDialog(null, "Limit exceeded");
                         } else {
                             double total = balance - wamount;
 
-                            //PART3
-                            //go to the table and update the query
-                            try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+                         
+                            try(Connection con = DriverManager.getConnection(url,"root",""))
                             {
                                 String sql = "update users set balance=? where username=?";
                                 try(PreparedStatement pst = con.prepareStatement(sql))
                                 {
-                                    //update the balance->
+                                  
                                     pst.setDouble(1,total);
-                                    //->for this username
+                                
                                     pst.setString(2,username);
                                     pst.executeUpdate();
 
                                     JOptionPane.showMessageDialog(null,"Successfully Withdrawn");
                                     t1.setText("");
-                                    //passbook mai paisa jaa raha hai and minus dikhna chahiye because its a record ki amount bahar jaa raha hai
+                             
                                     updatePassbook(username,"Withdraw",-wamount,balance-wamount);
                                 }
                             }
@@ -137,7 +132,7 @@ class Withdraw extends JFrame
     void updatePassbook(String username,String desc,double amount,double total)
     {
         String url = "jdbc:mysql://localhost:3306/batch2";
-        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+        try(Connection con = DriverManager.getConnection(url,"root",""))
         {
             String sql = "insert into transactions(username,description,amount,balance) values(?,?,?,?) ";
             try(PreparedStatement pst = con.prepareStatement(sql))
