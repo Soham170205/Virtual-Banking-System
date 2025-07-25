@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
 class Profile extends JFrame {
-    //this will activate only if s1 is username
+
     String naya = "";
 
     Profile(String username) {
@@ -61,12 +61,11 @@ class Profile extends JFrame {
         b1.addActionListener(
                 a->
                 {
-                    //passwrod ya fir username jo bhi select kiya hai user ne voh vaha jayega
-                    //kaunsa columne change karna hai
+                  
                     String s1 = box.getSelectedItem().toString().toLowerCase();
-                    //new value of the column to change
+               
                     String s2 = t1.getText();
-                    //s2 khali nahi hona chahiye
+             
                     if(s2.isEmpty())
                     {
                         JOptionPane.showMessageDialog(null,"Cannot Be Empty");
@@ -75,19 +74,18 @@ class Profile extends JFrame {
 
 
 
-                    //DATABASE
-                    //yaha jake update karna hai
+                  
                     String url = "jdbc:mysql://localhost:3306/batch2";
                     try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
                     {
-                        //update whatever(s1) you want to update for that user
+   
                         String sql = "update users set "+s1+" =? where username=?";
                         try(PreparedStatement pst = con.prepareStatement(sql))
                         {
                             pst.setString(1,s2);
                             pst.setString(2,username);
 
-                            //table mai ched chaani karna hai isiliye executeUpdate
+                         
                             pst.executeUpdate();
                             JOptionPane.showMessageDialog(null,"Successfully Updated "+s1.toUpperCase());
                             t1.setText("");
@@ -99,19 +97,15 @@ class Profile extends JFrame {
                         return;
                     }
 
-                    //agar username change ho raha hai toh you need to update the username on the dashboard too
+      
                     if(s1.equals("username"))
                     {
-                        //reload the profile i.e. dispose and new (reload)
-                        /* the issue here was that when you change the username and then change the password both at the same time
-                         then because the profile page has the previous username stored in it, it cannot update the password of the
-                         new username and therefore to avoid this we reload the profile page everytime we change something
-                         */
+                 
                         dispose();
-                        //reload with new username
+                       
                         new Profile(s2);
-                      //  String url = "jdbc:mysql://localhost:3306/batch2";
-                        try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+            
+                        try(Connection con = DriverManager.getConnection(url,"root",""))
                         {
                             String sql = "update transactions set username=? where username=?";
                             try(PreparedStatement pst = con.prepareStatement(sql))
@@ -120,7 +114,7 @@ class Profile extends JFrame {
                                 pst.setString(2,username);
                                 pst.executeUpdate();
 
-                                //JOptionPane.showMessageDialog(null,"Successfully Updated "+s1.toUpperCase());
+                
 
                             }
                         }
