@@ -61,25 +61,22 @@ class Elogin extends JFrame {
                 a->
                 {
                     String url = "jdbc:mysql://localhost:3306/batch2";
-                    try(Connection con = DriverManager.getConnection(url,"root","SohamSQL#1211"))
+                    try(Connection con = DriverManager.getConnection(url,"root",""))
                     {
-                        //username and password hio chahiye
+                  
                         String sql = "select * from users where username=? and password=?";
-                        //unprepared statement ko [prepared staterment mai convert karta hai
+             
                         try(PreparedStatement pst = con.prepareStatement(sql))
                         {
 
-                            //username
+                        
                             pst.setString(1,t1.getText());
-                            //pssword
-                            //when you change it from text field to passwrod field you cannot extract it directly in  string format hence
-                            //you first have to convert it into string again and then extract it
+                         
                             String s1 = new String(t2.getPassword());
                             pst.setString(2,s1);
-                            //hame update nahi karna hai table hame  resultset banana hai toh isiliye execute query
+                 
                             ResultSet rs = pst.executeQuery();
-                            //customer khali hoga toh rs khali milega if rs khali hai toh if statement falso hoke else mai chala jayega
-                            //rs.next yani result set ma ikoi toh hai and its not empty
+                    
                             if(rs.next())
                             {
                                JOptionPane.showMessageDialog(null, "Successful");
